@@ -1,0 +1,39 @@
+{
+  "name": "demo-app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon",
+    "docker:new:volume": "docker volume create redis-store",
+    "docker:new:container": "docker run -d --name myrpg-redis -p 6379:6379 -v redis-store:/etc/redis redis",
+    "docker:new": "npm run docker:new:volume && npm run docker:new:container",
+    "docker:restart": "docker restart myrpg-redis"
+  },
+  "nodemonConfig": {
+    "exec": "ts-node ./src/app.ts",
+    "quiet": true,
+    "watch": [
+      "src/*.ts"
+    ],
+    "events": {
+      "start": "printf \"\\x1Bc\"",
+      "crash": "printf \"\n\n\nprocess.exit(1)\"",
+      "exit": "printf \"\n\n\nprocess.exit(0) - Save file or type rs to restart...\"",
+      "restart": "printf \"\\x1Bc\""
+    }
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "@types/node": "^16.11.12",
+    "nodemon": "^2.0.15",
+    "ts-node": "^10.4.0",
+    "typescript": "^4.5.3"
+  }
+}
